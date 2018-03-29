@@ -1,0 +1,256 @@
+
+%%% Introduccion a la inteligencia artificial %%%
+
+\section{Definición de IA}
+
+La inteligencia artificial es la parte de las Ciencias de la Computación que
+se ocupa del diseño de sistemas inteligentes, esto es, sistemas que exhiben
+características que asociamos con la inteligencia en las conductas humanas.\\
+Feigenbaum y Barr, '80s
+
+Es estudio de cómo lograr que las computadoras realicen tareas que, por el
+momento, los humanos hacen mejor.\\
+E. Rich y Knight, 1991
+
+La rama de las Ciencias de la Computación que se ocupa de la automatización
+de la conducta inteligente.\\
+Luger y Stubblefield, 1993
+
+Es la Ciencia e Ingeniería de hacer máquinas inteligentes (especialmente
+programas). Esto está relacionado a la tarea de usar computadoras para
+entender la inteligencia humana, pero IA no tiene que limitarse a métodos
+que son biológicamente observables.\\
+J. McCarthy, 1998
+
+Las definiciones se agrupan en:
+\begin{tabular}{| c | c |}
+\hline
+Sistemas que piensan como humanos &
+Sistemas que piensan racionalmente \\
+\hline
+Sistemas que actuan como humanos &
+Sistemas que actuan racionalmente
+\hline
+\end{tabular}
+
+Ramas de IA:
+\begin{itemize}
+    \item Búsqueda heurística
+    \item Representación del conocimiento
+    \item Inferencia
+    \item Planificación
+    \item Aprendizaje
+    \item Lenguaje natural
+    \item Visión
+    \item Robótica
+\end{itemize}
+
+\textbf{Agente} es todo aquello que percibe su ambiente mediante sensores
+y que responde o actúa mediante efectores. Un \textbf{agente inteligente}
+debe hacer siempre lo correcto de acuerdo a sus percepciones. Es aquel que
+emprende la mejor acción posible en una situación dada. La noción estándar
+de un agente inteligente es: un sistema con las propiedades de autonomía,
+habilidad social, reactividad y proactividad.
+
+\textbf{Sistemas multi-agente}: Cada agente tiene información y capacidades
+limitadas para resolver un problema. Puede no existir un control global del
+sistema. Los datos están descentralizados y la computación es asíncrona.
+Proveen más robustez, eficiencia y permiten la interoperatividad de sistemas
+existentes.
+
+\section{Representación de problemas y búsqueda sin información}
+¿Cómo formular un problema de modo que permita la construcción de un proceso
+para la búsqueda de soluciones?
+\begin{itemize}
+    \item Formulación de problemas mediante espacio de estados (representación
+        formal)
+    \item Aplicación de distintas técnicas de búsqueda (secuencia de operadores)
+\end{itemize}
+Una solución es una secuencia de acciones (un plan) que permite transformar el
+estado inicial en un estado meta.\\
+En la definición de operadores es útil tener en cuenta:
+\begin{itemize}
+    \item Suposiciones presentes en la descripción informal del problema que no
+        están expresadas como tales (es útil representarlas).
+    \item Nivel de generalidad de las reglas (recordar presentar casos
+        especiales de utilidad).
+    \item No incluir reglas inutiles.
+    \item Pensar en un conjunto que resuelva más de un caso.
+\end{itemize}
+\textbf{Grafo de espacio de estados}: es una representación matemática de un
+problema de búsqueda. Los nodos son configuraciones del mundo (abstracciones).
+Los arcos representan sucesores (resultados de las acciones). El test de goal
+es un conjunto de nodos meta (puede ser uno solo). En un grafo de búsqueda,
+cada estado ocurre una sola vez. Raramente se construye todo el grafo en memoria
+(es muy grande), pero es una buena idea.
+
+Un árbol de búsqueda es un árbol de planes "what if" y sus salidas. El nodo de
+inicio es el nodo raíz. Los hijos corresponden a sucesores. Los nodos representan
+estados, pero corresponden a \textit{planes} para alcanzar esos estados. Para
+la mayoría de los problemas no se construye todo el árbol.
+
+Cada nodo en un árbol de búsqueda representa todo un camino en el grafo. Se
+construyen ambos según demanda, tan pequeños como sea posible.
+
+\textbf{Búsqueda}: Es el proceso de evaluar las distintas secuencias de acciones
+(planes) para encontrar las que me lleven del estado inicial al estado meta. Es
+muy importante en la solución de problemas de IA, si no existen técnicas más
+directas.
+
+Las estrategias de búsqueda deben ocasionar cambios, si no nunca alcanzará una
+solución del problema. También deben ser sistemáticas, es necesario un cambio
+global (en el curso de varios pasos), esto evita la reiteración de secuencias de
+operadores poco apropiados. Y deben ser eficientes: completas, menor complejidad
+posible (espacial y temporal), y una buena solución (si es óptima mejor).
+
+\textbf{Enfoque de agentes}: Un agente formula una meta y debe esforzarse por
+alcanzarla. Formulará el problema a encarar dependiendo de si conoce su estado
+actual y si conoce el resultado de sus acciones, esto lo hace a través de
+\textit{sensores}.
+
+Agregamos a la definición de \textit{problema}: Prueba de meta (¿es el estado
+actual una meta?) y costo de ruta (g), que es la suma de las acciones
+individuales (operadores) que se emprenden al recorrerla.
+
+El verdadero arte de la solución de problemas consiste en decidir qué es lo que
+servirá para representar los estados y operadores, y qué no. Hay que realizar un
+proceso de eliminación de los detalles que sean innecesarios -> Abstracción.
+
+\textbf{Estrategias de búsqueda}
+\begin{description}
+    \item[Búsqueda sin información] El agente sólo puede diferenciar un nodo que
+        es meta de uno que no lo es. No posee información respecto a cuántos pasos
+        necesita dar, o a qué distancia está de la meta.
+    \item[Búsqueda con información] El agente posee información sobre el problema
+        para elegir operadores más convenientes.
+\end{description}
+Las estrategias de búsqueda sin información se diferencias por el orden en que se
+expanden los nodos.
+
+\textbf{Propiedades de los algoritmos de búsqueda}
+\begin{itemize}
+    \item Completitud: Garantiza encontrar una solución si existe alguna.
+    \item Optimidad: Garantiza encontrar la solución óptima (menor costo).
+    \item Complejidad espacial y temporal.
+\end{itemize}
+Nomenclatura adicional: $b$ es el factor de ramificación, $m$ es la profundidad
+máxima.
+
+\subsection{Búsqueda a lo ancho (Breadth-First Search)}
+Estrategia: expandir los nodos menos profundos primero. Implementa una lista de
+nodos como FIFO. Procesa todos los nodos arriba de la solución menos profunda.
+Si la solución está a profundidad $s$, el tiempo de búsqueda es $O(b^s)$.
+La complejidad espacial (nodos de la frontera) es aprox. $O(b^s)$.\\
+El algoritmo es completo, $s$ debe ser finito si la solución existe, y es
+óptimo, considerando todos los costos de operadores 1.
+
+\subsection{Búsqueda de costo uniforme}
+Expande siempre el nodo de menor costo. El costo de ruta asociado a cada nodo $n$
+es $g(n)$, si $g(n) = profundidad(n)$, la búsqueda es preferente por amplitud (a lo
+ancho). Garantiza obtener la solución más barata si el costo de ruta nunca disminuye
+al avanzar ($g(sucesor(n)) \geq g(n)$).
+
+El algoritmo es completo, y es óptimo siempre que el costo asociado al árbol de
+búsqueda no sea decreciente en profundidad. La complejidad, espacial y temporal,
+es $O(b^s)$, donde $s$ es la profundidad de la solución.
+
+\subsection{Búsqueda preferente en profundidad (Deep-First Search)}
+Se expande siempre uno de los nodos que se encuentra en el nivel más profundo.
+Sólo cuando un nodo no tiene expansión se revierte la búsqueda y se expanden
+nodos de niveles menos profundos. En este algoritmo sólo debe guardarse la ruta
+y los nodos no expandidos, por lo cual no necesita tanta memoria como otros
+algoritmos, BFS por ejemplo.
+
+La complejidad espacial de DFS es $O(b.m)$, donde $m$ es la profundidad máxima
+del árbol de búsqueda. Su complejidad temporal es $O(b^m)$. No es óptima, ya que
+puede encontrar antes una solución que no es la mejor; ni es completa, puede
+atascarse en bucles o caminos $\infty$. No es aconsejable utilizarla si el
+árbol es de gran profundidad máxima.
+
+\subsection{Búsqueda limitada por profundidad}
+Se impone un límite máximo a la profundidad de la ruta, con lo cual se elimina
+la posibilidad de atascamientos de DFS. Dado el límite $l$, su complejidad
+espacial es $O(b.l)$, mientras su complejidad temporal es $O(b^l)$. Como DFS,
+no es óptima, pero es completa si se elige el límite adecuado para el problema.
+Si el límite es demasiado pequeño no puede garantizarse completitud, es
+aconsejable donde se tenga idea de un límite razonable.
+
+\subsection{Búsqueda por profundización iterativa}
+Resuelve el problema que tiene BLP de elegir un límite adecuado. Propone probar
+todos los límites, empezando de 0. Combina las ventajas de
+\begin{itemize}
+    \item DFS: Menor consumo de memoria
+    \item BFS: Completa y óptima
+\end{itemize}
+Su complejidad espacial es $O(b.d)$, en tanto que la temporal es $O(b^d)$.
+La desventaja es que los nodos de niveles altos se expanden varias veces. Es
+aconsejable en espacios grandes donde se ignora la profundidad de la solución.
+
+\subsection{Comparación de las estrategias}
+\begin{tabular}{| c | c | c | c | c |}
+\hline
+Criterio & Tiempo & Espacio & Óptima? & Completa? \\
+\hline
+BFS & $b^d$ & $b^d$ & Sí & Sí \\
+\hline
+Costo uniforme & $b^d$ & $b^d$ & Sí & Sí \\
+\hline
+DFS & $b^m$ & $b.m$ & No & No \\
+\hline
+Limitada en profundidad & $b^l$ & $b.l$ & No & Cuando $l \geq d$ \\
+\hline
+Profundización iterativa & $b^d$ & $b.d$ & Sí & Sí \\
+\hline
+Bidireccional & $b^{\frac{d}{2}}$ & $b^{\frac{d}{2}}$ & Sí & Sí
+\hline
+\end{tabular}
+
+\subsection{El problema de los estados repetidos}
+En algunos problemas se llega a un estado de una sola forma, y por ende
+es imposible repetir. Cuando los operadores son reversibles, entonces
+pueden obtenerse árboles infinitos (misioneros y caníbales, rutas). Evitar
+las repeticiones disminuye sensiblemente el costo de la búsqueda.
+
+Formas de evitar los estados repetidos:
+\begin{enumerate}
+    \item No regresar al estado del que acaba de llegar, $sucesor(n) \neq n$.
+    \item No generar rutas que tengan ciclos, $sucesor(n) \neq \{n\}
+        \cup ancestros(n)$.
+    \item No generar ningún estado que se haya generado alguna vez.
+\end{enumerate}
+Hay un compromiso entre el costo de almacenar y verificar, y el costo de 
+la búsqueda adicional a realizar.
+
+
+
+\section{Búsqueda con información}
+Para reducir la extensión de la búsqueda desinformada debemos incorporarle
+conocimiento. Al contar con información específica sobre un espacio de estados,
+se evitan emprender búsquedas a ciegas. Con métodos generales más heurísticas
+de propósito especial, se obtiene mayor eficiencia.
+
+Se utiliza una \textbf{función heurística} para representar lo deseable que es
+la expansión de un nodo. Una función heurística tiene tipo $f : Estados \to Num$
+El problema de búsqueda se puede considerar como la minimización de una función.
+Si $f$ está bien diseñada, guía la búsqueda eficientemente. Una $f$ ideal
+establece el camino a la meta. \textit{Problema: Elegir buenas heurísticas}.
+
+\subsection{Búsqueda primero el mejor (Best First)}
+Los nodos se ordenan de tal manera que se expande el nodo de mejor valor de la
+función heurística $f$ (mínimo, máximo), esta función puede incorporar
+conocimiento del dominio. Si $f(n) = g(n)$, donde $g(n)$ es el costo de ruta,
+la búsqueda se transforma en una de costo uniforme.
+
+\subsection{Búsqueda de costo mínimo (Greedy)}
+Implementa búsqueda primero el mejor, buscando el mínimo de una función $h(n)$
+que representa el costo estimado para lograr llegar del estado $n$ a un estado
+meta. Si $m$ es un nodo meta, $h(m) = 0$; y si $l$ es una hoja del árbol desde
+la cual no se puede llegar a un nodo meta, $h(l) = \infty$. Esta búsqueda no 
+es óptima, ni completa (es susceptible a pasos en falso). Su complejidad
+espacial y temporal es $O(b^m)$, ya que mantiene todos los nodos en memoria,
+aunque si $h$
+
+
+
+
+

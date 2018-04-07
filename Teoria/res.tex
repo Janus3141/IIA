@@ -230,15 +230,15 @@ se evitan emprender búsquedas a ciegas. Con métodos generales más heurística
 de propósito especial, se obtiene mayor eficiencia.
 
 Se utiliza una \textbf{función heurística} para representar lo deseable que es
-la expansión de un nodo. Una función heurística tiene tipo $f : Estados \to Num$
+la expansión de un nodo. Una función heurística tiene tipo $h : Estados \to Num$
 El problema de búsqueda se puede considerar como la minimización de una función.
-Si $f$ está bien diseñada, guía la búsqueda eficientemente. Una $f$ ideal
+Si $h$ está bien diseñada, guía la búsqueda eficientemente. Una $h$ ideal
 establece el camino a la meta. \textit{Problema: Elegir buenas heurísticas}.
 
 \subsection{Búsqueda primero el mejor (Best First)}
 Los nodos se ordenan de tal manera que se expande el nodo de mejor valor de la
-función heurística $f$ (mínimo, máximo), esta función puede incorporar
-conocimiento del dominio. Si $f(n) = g(n)$, donde $g(n)$ es el costo de ruta,
+función heurística $h$ (mínimo, máximo), esta función puede incorporar
+conocimiento del dominio. Si $h(n) = g(n)$, donde $g(n)$ es el costo de ruta,
 la búsqueda se transforma en una de costo uniforme.
 
 \subsection{Búsqueda de costo mínimo (Greedy)}
@@ -248,9 +248,171 @@ meta. Si $m$ es un nodo meta, $h(m) = 0$; y si $l$ es una hoja del árbol desde
 la cual no se puede llegar a un nodo meta, $h(l) = \infty$. Esta búsqueda no 
 es óptima, ni completa (es susceptible a pasos en falso). Su complejidad
 espacial y temporal es $O(b^m)$, ya que mantiene todos los nodos en memoria,
-aunque si $h$
+aunque si $h$ es una buena heurística, la complejidad disminuye.
 
+\subsection{Búsqueda A*}
+Implementa búsqueda primero el mejor, pero persigue el mínimo costo total,
+combinando el costo de ruta hasta $n$ y el costo de $n$ hasta una meta. Es
+decir, en cada paso, se busca el mínimo valor de $f(n)$ entre todos los nodos
+$n$ de la frontera, donde $f(n) = g(n) + h(n)$, $g(n)$ es el costo de ruta
+hasta $n$ y $h(n)$ una función heurística evaluada en $n$ (el costo estimado
+desde $n$ hasta la meta).
 
+Una heurística admisible nunca sobreestima el costo de llegar a la meta. Si
+$h(n)$ es admisible, $f(n)$ tampoco sobreestima el costo real de la mejor
+solución pasando por $n$.
+
+El mayor trabajo para resolver problemas de búsqueda duros óptimamente es
+encontrar heurísticas admisibles. Generalmente estas son soluciones de problemas
+relajados, donde se permiten más acciones que en el problema real. Por otro
+lado, algunas heurísticas inadmisibles también pueden ser útiles.
+
+Para que A* sea completa y óptima se tiene que dar dos condiciones:
+\begin{enumerate}
+    \item Que $h$ sea admisible ($h(n) \leq h*(n), \forall n$; donde $h*(n)$ el
+    el costo mínimo de $n$ hasta la meta).
+    \item Que $f$ sea consistente, es decir, que sea monótona
+    ($f(padre(n)) \leq f(n)$).
+\end{enumerate}
+
+\subsubsection{Teorema, optimalidad de A*}
+Si $h$ es admisible, entonces A* siempre va a encontrar un nodo meta óptimo.
+
+\textbf{Prueba}: Sea $G1$ el nodo meta de mínimo costo. Se supone que A*
+seleccione un nodo meta subóptimo $G2$, donde $g(G1) < g(G2)$. Sea $n$ un nodo
+sin expandir en la ruta desde el nodo inicio hasta $G1$. Notar que ese nodo sin
+expandir necesariamente existe de acuerdo con la suposición previa, en otro
+caso $G1$ ya habría sido elegido (porque $h(G1) = h(G2) = 0$, entonces se elige
+el nodo meta con menor $g$). Puesto que $n$ no ha sido elegido para su expansión
+en su ruta hacia $G2$, se sigue que:
+$$ f(n) = g(n) + h(n) \geq f(G2) = g(G2) $$
+Sea $f*$ el costo hasta la meta óptima, dado que $f$ es monótona,
+$$ f* \geq g(n) + h(n) = f(n) $$
+Entonces
+$$ f* \geq f(n) \geq g(G2) $$
+Como $G1$ es la meta óptima,
+$$ f* = g(G1) \geq g(G2) $$
+Lo cual contradice la suposición de que $G2$ es una meta subóptima. Por lo tanto,
+$G1$ será elegido por A*, Q.E.D.
+
+\subsubsection{Casos límites de A*}
+Sea $c$ constante:
+\begin{itemize}
+\item Si $h(n) = 0$ y $g(n) = 0$ para todo $n$ \longrightarrow Búsqueda aleatoria
+\item Si $h(n) = 0$ y $g(n) = c$ para todo $n$ \longrightarrow BFS
+\item Si $h(n) = \frac{1}{c}$ y $g(n) = 0$ para todo $n$ \longrightarrow DFS
+\item Si $h(n) = 0$ para todo $n$ \longrightarrow UCS
+\item Si $g(n) = 0$ para todo $n$ \longrightarrow Greedy
+\item Si $h(n) > h*(n)$ para todo $n$ \longrightarrow $h$ no es admisible, y A*
+    puede no ser óptima.
+\item Si $h(n) << h*(n)$ \longrightarrow A* es óptima pero puede que se expandan
+    nodos de más.
+\end{itemize}
+
+Cuanto más precisas sean las heurísticas, los contornos se concentrar más en torno
+de la ruta óptima.
+
+\subsubsection{Completitud}
+A* expande nodos en orden creciente de $f$, con lo cual expandirá hasta llegar al
+estado meta. Salvo que haya una cantidad infinita de nodos con $f(n) < f*$, tanto
+si hay una ruta con costo finito pero con número infinito de nodos a lo largo de
+ella, como si un nodo posee un factor de ramificación infinito.
+
+\subsubsection{Otras características}
+A* es óptimamente eficiente, ningún otro algoritmo óptimo expandirá menos nodos
+que A*.
+
+La complejidad de A* es exponencial: $O(b^d)$. Aunque es subexponencial si el
+error de $h$ es muy pequeño: $| h(n) - h*(n) | \leq O(log\; h*(n))$.
+
+Usualmente A* se queda sin espacio antes de quedarse sin tiempo, puesto que
+mantiene a todos los nodos en memoria.
+
+\subsubsection{Variantes de A*}
+\begin{description}
+    \item[Iterative Deepening A*] Se realizan iteraciones con DFS que se
+    interrumpen si el costo total ($g + h$) excede un límite dado. Si no
+    se llega a la meta se puede actualizar el límite empezando con el mínimo
+    costo encontrado en las iteraciones. Ventajas: Menor uso de memoria con
+    DFS. Desventajas: No detecta estados repetidos.
+    \item[Simplified Memory Bounded A*] Se descartan nodos de la memoria que
+    tengan valores de $f$ altos, y estos valores descartados son memorizados
+    en ancestros. Si no se encuentran mejores rutas, se regeneran nodos
+    descartados. SMA* es óptima y completa si la solución más cercana entró
+    en la memoria, caso contrario entrega la mejor solución alcanzable. Esta
+    búsqueda usa toda la memoria disponible, por lo cual evita estados
+    repetidos sujetos a disponibilidad.  
+
+\subsection{Sobre heurísticas}
+Para encontrar una buena heurística para un problema:
+\begin{enumerate}
+    \item Utilizar un problema relajado, con menos restricciones impuestas a
+    los operadores.
+    \item Mejor usar una función heurística mayor, sin sobreestimar
+    ($h(n) = max(h_1(n),...,h_m(n))$).
+    \item La evaluación heurística debería ser eficiente, ya que suma costo
+    de búsqueda.
+\end{itemize}
+
+\subsection{Algoritmos de mejoramiento iterativo}
+En estos algoritmos no interesa la ruta a la solución. La idea básica
+consiste en comenzar con una configuración completa y luego modificarla.
+El objetivo es explorar en búsqueda de las cimas más altas (soluciones
+óptimas).
+
+\subsubsection{Hill-Climbing}
+Utiliza una función de evaluación en la prueba de la meta. A partir de un
+estado, se realiza un bucle que constantemente se desplaza en la dirección
+ascendente (el mejor siguiente estado inmediato), hasta encontrar una
+solución o atascarse. Características:
+\begin{itemize}
+    \item No mantiene árbol de búsqueda.
+    \item Descarta información de ruta.
+    \item Depende de la estructura de la "superficie" del espacio de
+    estados: si encuentra máximos locales el algoritmo para aunque no
+    encontró la solución, si llega a una meseta la búsqueda se vuelve
+    aleatoria, si llega a una cresta puede que la búsqueda avance poco.
+\end{itemize}
+Si el algoritmo encuentra un mal camino, puede:
+\begin{itemize}
+    \item Arrancar con otra configuración inicial.
+    \item Hacer backtrack y tomar otra dirección.
+    \item Saltar a otra sección del espacio.
+    \item Aplicar dos o más reglas antes de evaluar.
+\end{itemize}
+
+\subsubsection{Simulated annealing}
+Proceso de búsqueda global u optimización global en sistemas de
+comportamiento estocástico, con alguna probabilidad que es función
+de una "temperatura" (un cierto parámetro que desciende), con lo cual
+la conducta no es completamente determinística. La temperatura arranca
+siendo alta, y va descendiendo con un programa preestablecido.
+
+Si el programa de enfriamiento es demasiado rápido las transiciones
+de fase ocurren desordenadamente, mientras que si el programa es suave
+se logra mayor estabilidad (mínimo global en vez de alguno local).
+
+Pertenece a la familia de los métodos de búsqueda heurísticos, admite
+que haya pasos en falso, que no mejoran la evaluación, pero estos van
+disminuyendo en su probabilidad a lo largo del tiempo.
+
+En cada paso se elige un movimiento al azar, si es mejor se ejecuta,
+si es peor se ejecuta con una probabilidad de que decrezca
+exponencialmente lo "malo" del movimiento y la "temperatura".
+
+\subsection{Constraint Satisfaction Problem}
+Los estados se definen mediante los valores de un conjunto de variables
+y el objetivo se especifica mediante un conjunto de restricciones que
+los valores deben satisfacer. La solución: dar valores para todas las
+variables que satisfagan todas las restricciones.
+
+Los problemas CSP son de complejidad NP-Completos, aunque en muchos de
+los problemas reales se aprovecha la estructura del problema para
+reducir el espacio de búsqueda.
+
+Se pueden utilizar algoritmos de búsqueda general, pero tienen mayor
+eficiencia los que fueron diseñados especialmente (verificación
+anticipada, consistencia de arco, etc.).
 
 
 

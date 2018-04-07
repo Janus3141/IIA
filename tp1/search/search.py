@@ -89,30 +89,7 @@ def search(problem, fringe):
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first
-
-    Your search algorithm needs to return a list of actions that reaches
-    the goal.  Make sure to implement a graph search algorithm
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    """state, actions = problem.getStartState(), list()
-    states = list()
-    closed_set = set()
-    while not problem.isGoalState(state):
-        closed_set.add(state)
-        successors = problem.getSuccessors(state)
-        successors = filter(lambda x: x[0] not in closed_set, successors)
-        successors = map(lambda x: (x[0], actions + [x[1]]), successors)
-        successors.reverse()
-        states = successors + states
-        state, actions = states[0]
-        states = states[1:]
-    return actions"""
     return search(problem, util.Stack())
 
 
@@ -120,18 +97,6 @@ def breadthFirstSearch(problem):
     """
     Search the shallowest nodes in the search tree first.
     """
-    """state, actions = problem.getStartState(), list()
-    states = list()
-    closed_set = set()
-    while not problem.isGoalState(state):
-        closed_set.add(state)
-        successors = problem.getSuccessors(state)
-        successors = filter(lambda x: x[0] not in closed_set, successors)
-        successors = map(lambda x: (x[0], actions + [x[1]]), successors)
-        states += successors
-        state, actions = states[0]
-        states = states[1:]
-    return actions"""
     return search(problem, util.Queue())
 
 
@@ -140,16 +105,15 @@ def uniformCostSearch(problem):
     state, actions = problem.getStartState(), list()
     cost = 0
     states = util.PriorityQueue()
-    closed_set = set()
+    closed_set = set([state])
     while not problem.isGoalState(state):
-        closed_set.add(state)
         successors = problem.getSuccessors(state)
         successors = filter(lambda x: x[0] not in closed_set, successors)
-        successors = map(lambda x: ((x[0], actions + [x[1]]), cost + x[2]), successors)
+        successors = map(lambda x: (x[0], actions + [x[1]], cost + x[2]), successors)
         for succ in successors:
-            states.push(*succ)
-        cost, s_and_a = states.pop()
-        state, actions = s_and_a
+            closed_set.add(succ[0])
+            states.push(succ[:2], succ[2])
+        cost, (state,actions) = states.pop()
     return actions
 
 
@@ -160,19 +124,20 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
     state, actions = problem.getStartState(), list()
     cost = 0
     h = heuristic(state,problem)
     states = util.PriorityQueueWithFunction(lambda x: x[2]+x[3])
-    closed_set = set()
+    closed_set = set([state])
     while not problem.isGoalState(state):
-        closed_set.add(state)
         successors = problem.getSuccessors(state)
         successors = filter(lambda x: x[0] not in closed_set, successors)
         successors = map(lambda x: (x[0], actions+[x[1]], cost+x[2], heuristic(x[0],problem)), successors)
         for succ in successors:
+            closed_set.add(succ[0])
             states.push(succ)
         state, actions, cost, h = states.pop()
     return actions

@@ -1,39 +1,57 @@
 
 %%% Introduccion a la inteligencia artificial %%%
 
+\documentclass[a4paper,10pt]{paper}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\renewcommand{\baselinestretch}{1.2}
+\usepackage{parskip}
+\usepackage[margin=2cm]{geometry}
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0in}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+
+Resumen de teor\'ia de Introducci\'on a la Inteligencia Artificial
+
 \section{Definición de IA}
 
-La inteligencia artificial es la parte de las Ciencias de la Computación que
+\textit{La inteligencia artificial es la parte de las Ciencias de la Computación que
 se ocupa del diseño de sistemas inteligentes, esto es, sistemas que exhiben
-características que asociamos con la inteligencia en las conductas humanas.\\
-Feigenbaum y Barr, '80s
+características que asociamos con la inteligencia en las conductas humanas.}\\
+Feigenbaum y Barr, '80s\\
 
-Es estudio de cómo lograr que las computadoras realicen tareas que, por el
-momento, los humanos hacen mejor.\\
-E. Rich y Knight, 1991
+\textit{Es el estudio de cómo lograr que las computadoras realicen tareas que, por el
+momento, los humanos hacen mejor.}\\
+E. Rich y Knight, 1991\\
 
-La rama de las Ciencias de la Computación que se ocupa de la automatización
-de la conducta inteligente.\\
-Luger y Stubblefield, 1993
+\textit{La rama de las Ciencias de la Computación que se ocupa de la automatización
+de la conducta inteligente.}\\
+Luger y Stubblefield, 1993\\
 
-Es la Ciencia e Ingeniería de hacer máquinas inteligentes (especialmente
+\textit{Es la Ciencia e Ingeniería de hacer máquinas inteligentes (especialmente
 programas). Esto está relacionado a la tarea de usar computadoras para
 entender la inteligencia humana, pero IA no tiene que limitarse a métodos
-que son biológicamente observables.\\
-J. McCarthy, 1998
+que son biológicamente observables.}\\
+J. McCarthy, 1998\\
 
-Las definiciones se agrupan en:
-\begin{tabular}{| c | c |}
+Las definiciones se agrupan en:\\
+\begin{tabular}{| p{6cm} | p{6cm} |}
 \hline
 Sistemas que piensan como humanos &
 Sistemas que piensan racionalmente \\
 \hline
 Sistemas que actuan como humanos &
-Sistemas que actuan racionalmente
+Sistemas que actuan racionalmente \\
 \hline
 \end{tabular}
-
-Ramas de IA:
+\\
+\\
+\\
+\textbf{Ramas de IA}:
 \begin{itemize}
     \item Búsqueda heurística
     \item Representación del conocimiento
@@ -114,16 +132,16 @@ individuales (operadores) que se emprenden al recorrerla.
 
 El verdadero arte de la solución de problemas consiste en decidir qué es lo que
 servirá para representar los estados y operadores, y qué no. Hay que realizar un
-proceso de eliminación de los detalles que sean innecesarios -> Abstracción.
+proceso de eliminación de los detalles que sean innecesarios $\to$ Abstracción.
 
 \textbf{Estrategias de búsqueda}
-\begin{description}
-    \item[Búsqueda sin información] El agente sólo puede diferenciar un nodo que
+\begin{itemize}
+    \item Búsqueda sin información: El agente sólo puede diferenciar un nodo que
         es meta de uno que no lo es. No posee información respecto a cuántos pasos
         necesita dar, o a qué distancia está de la meta.
-    \item[Búsqueda con información] El agente posee información sobre el problema
+    \item Búsqueda con información: El agente posee información sobre el problema
         para elegir operadores más convenientes.
-\end{description}
+\end{itemize}
 Las estrategias de búsqueda sin información se diferencias por el orden en que se
 expanden los nodos.
 
@@ -201,7 +219,7 @@ Limitada en profundidad & $b^l$ & $b.l$ & No & Cuando $l \geq d$ \\
 \hline
 Profundización iterativa & $b^d$ & $b.d$ & Sí & Sí \\
 \hline
-Bidireccional & $b^{\frac{d}{2}}$ & $b^{\frac{d}{2}}$ & Sí & Sí
+Bidireccional & $b^{\frac{d}{2}}$ & $b^{\frac{d}{2}}$ & Sí & Sí \\
 \hline
 \end{tabular}
 
@@ -298,14 +316,14 @@ $G1$ será elegido por A*, Q.E.D.
 \subsubsection{Casos límites de A*}
 Sea $c$ constante:
 \begin{itemize}
-\item Si $h(n) = 0$ y $g(n) = 0$ para todo $n$ \longrightarrow Búsqueda aleatoria
-\item Si $h(n) = 0$ y $g(n) = c$ para todo $n$ \longrightarrow BFS
-\item Si $h(n) = \frac{1}{c}$ y $g(n) = 0$ para todo $n$ \longrightarrow DFS
-\item Si $h(n) = 0$ para todo $n$ \longrightarrow UCS
-\item Si $g(n) = 0$ para todo $n$ \longrightarrow Greedy
-\item Si $h(n) > h*(n)$ para todo $n$ \longrightarrow $h$ no es admisible, y A*
+\item Si $h(n) = 0$ y $g(n) = 0$ para todo $n \longrightarrow $ Búsqueda aleatoria
+\item Si $h(n) = 0$ y $g(n) = c$ para todo $n \longrightarrow $ BFS
+\item Si $h(n) = \frac{1}{c}$ y $g(n) = 0$ para todo $n \longrightarrow $ DFS
+\item Si $h(n) = 0$ para todo $n \longrightarrow $ UCS
+\item Si $g(n) = 0$ para todo $n \longrightarrow $ Greedy
+\item Si $h(n) > h*(n)$ para todo $n \longrightarrow h$ no es admisible, y A*
     puede no ser óptima.
-\item Si $h(n) << h*(n)$ \longrightarrow A* es óptima pero puede que se expandan
+\item Si $h(n) << h*(n) \longrightarrow $ A* es óptima pero puede que se expandan
     nodos de más.
 \end{itemize}
 
@@ -342,6 +360,7 @@ mantiene a todos los nodos en memoria.
     en la memoria, caso contrario entrega la mejor solución alcanzable. Esta
     búsqueda usa toda la memoria disponible, por lo cual evita estados
     repetidos sujetos a disponibilidad.  
+\end{description}
 
 \subsection{Sobre heurísticas}
 Para encontrar una buena heurística para un problema:
@@ -352,7 +371,7 @@ Para encontrar una buena heurística para un problema:
     ($h(n) = max(h_1(n),...,h_m(n))$).
     \item La evaluación heurística debería ser eficiente, ya que suma costo
     de búsqueda.
-\end{itemize}
+\end{enumerate}
 
 \subsection{Algoritmos de mejoramiento iterativo}
 En estos algoritmos no interesa la ruta a la solución. La idea básica
@@ -415,4 +434,7 @@ eficiencia los que fueron diseñados especialmente (verificación
 anticipada, consistencia de arco, etc.).
 
 
+
+
+\end{document}
 

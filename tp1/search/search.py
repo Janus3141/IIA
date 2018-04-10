@@ -128,19 +128,13 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
-
-    admis = consistencia.admisibilidad(problem,heuristic)
-    if admis:
-        print "La heuristica es admisible"
-    else:
-        exit(1)
-
+    
     consist = consistencia.consistencia(problem,heuristic)
     if consist:
         print "La heuristica es consistente"
     else:
-        exit(1)
-
+        print "Heuristica no consistente"
+    
     state, actions = problem.getStartState(), list()
     cost = 0
     h = heuristic(state,problem)

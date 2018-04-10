@@ -15,7 +15,8 @@
 \begin{document}
 
 
-Resumen de teor\'ia de Introducci\'on a la Inteligencia Artificial
+\textbf{\LARGE Resumen de teor\'ia de Introducci\'on a la
+Inteligencia Artificial}
 
 \section{Definición de IA}
 
@@ -304,12 +305,12 @@ caso $G1$ ya habría sido elegido (porque $h(G1) = h(G2) = 0$, entonces se elige
 el nodo meta con menor $g$). Puesto que $n$ no ha sido elegido para su expansión
 en su ruta hacia $G2$, se sigue que:
 $$ f(n) = g(n) + h(n) \geq f(G2) = g(G2) $$
-Sea $f*$ el costo hasta la meta óptima, dado que $f$ es monótona,
-$$ f* \geq g(n) + h(n) = f(n) $$
+Sea $f^*$ el costo hasta la meta óptima, dado que $f$ es monótona,
+$$ f^* \geq g(n) + h(n) = f(n) $$
 Entonces
-$$ f* \geq f(n) \geq g(G2) $$
+$$ f^* \geq f(n) \geq g(G2) $$
 Como $G1$ es la meta óptima,
-$$ f* = g(G1) \geq g(G2) $$
+$$ f^* = g(G1) \geq g(G2) $$
 Lo cual contradice la suposición de que $G2$ es una meta subóptima. Por lo tanto,
 $G1$ será elegido por A*, Q.E.D.
 
@@ -321,9 +322,9 @@ Sea $c$ constante:
 \item Si $h(n) = \frac{1}{c}$ y $g(n) = 0$ para todo $n \longrightarrow $ DFS
 \item Si $h(n) = 0$ para todo $n \longrightarrow $ UCS
 \item Si $g(n) = 0$ para todo $n \longrightarrow $ Greedy
-\item Si $h(n) > h*(n)$ para todo $n \longrightarrow h$ no es admisible, y A*
+\item Si $h(n) > h^*(n)$ para todo $n \longrightarrow h$ no es admisible, y A*
     puede no ser óptima.
-\item Si $h(n) << h*(n) \longrightarrow $ A* es óptima pero puede que se expandan
+\item Si $h(n) << h^*(n) \longrightarrow $ A* es óptima pero puede que se expandan
     nodos de más.
 \end{itemize}
 

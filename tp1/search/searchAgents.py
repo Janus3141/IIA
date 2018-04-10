@@ -331,6 +331,19 @@ class CornersProblem(search.SearchProblem):
 
 
 def cornersHeuristic(state, problem):
+    """
+    La heuristica para el problema de esquinas se obtiene de relajar el problema
+    al no considerar las paredes del layout. De esta forma se trata de obtener
+    el camino mas corto entre esquinas como si no existieran paredes, lo cual
+    asegura que no se sobreestima la longitud del camino. Para ello ademas es
+    necesario encontrar primero la distancia desde el Pacman hasta todas las
+    esquinas no visitadas, luego se calculan las distancias entre esquinas no
+    visitadas unequivocamente. Se podria realizar la heuristica calculando solo
+    el camino que comienza por la esquina no visitada mas cercana al Pacman,
+    pero se encontro que esto no promete admisibilidad. Para probar que la
+    heuristica es consistente en un layout, se programo una prueba
+    en consistencia.py, lo cual es utilizado en el codigo de A*
+    """
     corners = problem.corners
     position, visited = state
     unvisited = (set(corners)).difference(visited)
@@ -420,41 +433,34 @@ class AStarFoodSearchAgent(SearchAgent):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
 
+
 def foodHeuristic(state, problem):
     """
-    Your heuristic for the FoodSearchProblem goes here.
-
-    This heuristic must be consistent to ensure correctness.  First, try to come up
-    with an admissible heuristic; almost all admissible heuristics will be consistent
-    as well.
-
-    If using A* ever finds a solution that is worse uniform cost search finds,
-    your heuristic is *not* consistent, and probably not admissible!  On the other hand,
-    inadmissible or inconsistent heuristics may find optimal solutions, so be careful.
-
-    The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a
-    Grid (see game.py) of either True or False. You can call foodGrid.asList()
-    to get a list of food coordinates instead.
-
-    If you want access to info like walls, capsules, etc., you can query the problem.
-    For example, problem.walls gives you a Grid of where the walls are.
-
-    If you want to *store* information to be reused in other calls to the heuristic,
-    there is a dictionary called problem.heuristicInfo that you can use. For example,
-    if you only want to count the walls once and store that value, try:
-      problem.heuristicInfo['wallCount'] = problem.walls.count()
-    Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
+    Esta heuristica es muy similar a la de las esquinas, se deriva de relajar el
+    problema al no considerar las paredes del layout. Se calculan las distancias
+    entre la posicion del Pacman y cada uno de los puntos con comida, luego se
+    termina sumando la distancia del camino que sigue siempre a la comida mas cercana.
+    Sin embargo, a diferencia de la anterior, esta heuristica no es consistente.
     """
     position, foodGrid = state
     foodList = foodGrid.asList()
-    result = 0
-    current_node = position
-    while len(foodList) > 0:
-        distances = {manhattan(current_node,food):food for food in foodList}
-        result += min(distances)
-        current_node = distances[min(distances)]
-        foodList.remove(current_node)
-    return result
+    result = list()
+    for i, food in enumerate(foodList):
+        # Para cada comida, calcula la distancia del Pacman hasta ella
+        result.append(manhattan(position,food))
+        rest = set(foodList).difference({food})
+        current_node = food
+        # Luego se suman las distancias a la comida mas cercana,
+        # para cada comida en rest
+        while len(rest) > 0:
+            distances = {manhattan(current_node,node):node for node in rest}
+            result[i] += min(distances)
+            current_node = distances[min(distances)]
+            rest.remove(current_node)
+    if len(result) == 0:
+        return 0
+    else:
+        return min(result)
 
 
 class ClosestDotSearchAgent(SearchAgent):
